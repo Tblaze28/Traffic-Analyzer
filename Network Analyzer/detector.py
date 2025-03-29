@@ -70,4 +70,7 @@ def analyze_packet(packet_data: dict) -> list[str]:
     # === Rule 5: General Packet Burst ===
     packet_activity[src].append(now)
     recent_packets = [t for t in packet_activity[src] if now - t <= TIME_WINDOW]
-    if
+    if len(recent_packets) >= PACKET_RATE_THRESHOLD:
+        alerts.append(f"⚠️ High packet rate from {src}: {len(recent_packets)} in 60s")
+
+    return alerts
