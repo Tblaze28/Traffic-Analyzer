@@ -1,5 +1,6 @@
 # Entry point
 from detector import analyze_packet
+from datetime import datetime
 from logger import log_packet, flush_logs
 from visualizer import update_stats, display_summary
 import atexit
@@ -24,4 +25,3 @@ def handle_packet(pkt):
     ## Log packet data
     log_packet(packet_data)
     update_stats(packet_data)
-
