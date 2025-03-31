@@ -1,11 +1,55 @@
-from logger import log_packet, flush_logs
+import os
+import json
+import csv
+from datetime import datetime, timedelta
 
-# Example packet callback
-def handle_packet(pkt):
-    log_data = {
-        "timestamp": datetime.now().isoformat(),
-        "src": pkt[IP].src if IP in pkt else "",
-        "dst": pkt[IP].dst if IP in pkt else "",
-        "protcol": pkt.name
-    }
-    log_packet(log_data)
+# === CONFIG ===
+LOG_DIR = "logs"
+LOG_INTERVAL = timedelta(hours=2)
+
+# === State ===
+log_buffer = []
+last_flush_time = datetime.now()
+
+# Creat logs/directory if needed
+os.makedirs(LOG_DIR, exist_ok=True)
+
+def log_packet(packet_data: dict):
+    """
+    Adds a single packet's to the in-memory log buffer.
+    If the buffer is older than 2 hours, flush it to the disk.
+    """
+    global last_flush_time
+    log_buffer.append(packet_data)
+
+    if datetime.now() - last_flush_time >+ LOG_INTERVAL:
+        flush_logs()
+
+def flush_logs():
+    """
+    Writes buffered logs to both JSON and CSV files,
+    clears the buffer, and updates last flush time
+    """
+    global log_buffer, last_flush_time
+
+    if not log_buffer:
+        return                                          #nothing to flush
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+    json_path = os.path.join(LOG_DIR, f"packet_log_{timestamp}.json")
+    csv_path = os.path.join(LOG_DIR, f"packet_log_{timestamp}.csv")
+
+    #Save JSON
+    with open(json_path, "w") as f:
+        json.dump(log_buffer, f, indent=2)
+    
+    #Save CSV
+    keys = log_buffer[0].keys()
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, filenames=keys)
+        writer.writeheader()
+        writer.writerows(log_buffer)
+
+    #Clear Buffer and Update Timestamp
+    log_buffer= []
+    last_flush_time = datetime.now()

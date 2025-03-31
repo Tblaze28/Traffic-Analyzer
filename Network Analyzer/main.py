@@ -53,6 +53,7 @@ def handle_packet(pkt):
         ## Log packet data
         log_packet(packet_data)
         update_stats(packet_data)
+        flush_logs()
         
         print("Packet flags:", packet_data["flags"])
 
