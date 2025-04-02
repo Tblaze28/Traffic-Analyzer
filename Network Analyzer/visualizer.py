@@ -36,7 +36,7 @@ def display_summary(top_n=5):
         print(f"  {proto:<10}: {count}")
     
     print("\nTop Source IPs:")
-    for ip, count in source_ip_counter.most_commin(top_n):
+    for ip, count in source_ip_counter.most_common(top_n):
         print(f"  {ip:<15}: {count}")
     print("="*40 + "\n")
 
