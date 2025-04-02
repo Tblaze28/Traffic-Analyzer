@@ -1,11 +1,12 @@
 # Entry point
+from scapy.all import sniff, IP, TCP, UDP, DNS
 from detector import analyze_packet
 from datetime import datetime
 from logger import log_packet, flush_logs
 from visualizer import update_stats, display_summary
+from sniffer import start_sniffing
 import atexit
 atexit.register(display_summary)
-from scapy.all import IP, TCP, UDP, DNS
 
 # Example packet callback
 def handle_packet(pkt):
@@ -57,6 +58,9 @@ def handle_packet(pkt):
         
         print("Packet flags:", packet_data["flags"])
 
-
     except Exception as e:
         print(f"[!] Error handling packet {e}")
+
+if __name__ == "__main__":
+    print("[*] Starting network analyzer...")
+    start_sniffing(packet_callback=handle_packet, count=0)
