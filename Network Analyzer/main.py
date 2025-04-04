@@ -78,3 +78,5 @@ if __name__ == "__main__":
 
     # Register shutdown handler
 signal.signal(signal.SIGINT, graceful_shutdown)
+
+atexit.register(graceful_shutdown)
