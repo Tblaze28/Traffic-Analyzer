@@ -7,6 +7,8 @@ from visualizer import update_stats, display_summary
 from sniffer import start_sniffing
 from visualizer import plot_protocol_distribution, display_summary, plot_top_source_ips
 import atexit
+import sys
+import signal
 atexit.register(display_summary)
 
 # Example packet callback
@@ -73,3 +75,6 @@ def graceful_shutdown(signal_received=None, frame=None):
 if __name__ == "__main__":
     print("[*] Starting network analyzer...")
     start_sniffing(packet_callback=handle_packet, iface="eth0", count=0)
+
+    # Register shutdown handler
+signal.signal(signal.SIGINT, graceful_shutdown)
