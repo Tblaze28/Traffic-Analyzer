@@ -53,9 +53,9 @@ def plot_protocol_distribution():
         print("No data to plot.")
         return
 
-    plt.figures(figsize=(6, 6))
+    plt.figure(figsize=(6, 6))
     plt.title("Protocol Distribution")
-    plt.pie(sizes, labels=labels, autopct = "%1.1f%")
+    plt.pie(sizes, labels=labels, autopct = "%1.1f%%")
     plt.tight_layout()
     print("[DEBUG] Reached end of plot_protocol_distribution()")
     plt.show()
