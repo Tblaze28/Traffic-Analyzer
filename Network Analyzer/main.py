@@ -22,7 +22,7 @@ def handle_packet(pkt):
             "flags": ""
         }
         # === TCP Handling ===
-        if TCP in pkt:
+        if TCP in pkt and hasattr(pkt[TCP], "flags"):
             packet_data["protocol"] = "TCP"
             packet_data["dport"] = pkt[TCP].dport
 
