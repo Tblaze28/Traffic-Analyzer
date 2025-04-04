@@ -6,16 +6,8 @@ from logger import log_packet, flush_logs
 from visualizer import update_stats, display_summary
 from sniffer import start_sniffing
 from visualizer import plot_protocol_distribution, display_summary, plot_top_source_ips
-
 import atexit
 atexit.register(display_summary)
-
-
-
-if __name__ == "__main__":
-    print("[*] Starting network analyzer...")
-    start_sniffing(packet_callback=handle_packet, count=0)
-
 
 # Example packet callback
 def handle_packet(pkt):
@@ -83,3 +75,7 @@ def graceful_shutdown(signal_received=None, frame=None):
     plot_top_source_ips(10)
 
     sys.exit(0)
+
+if __name__ == "__main__":
+    print("[*] Starting network analyzer...")
+    start_sniffing(packet_callback=handle_packet, count=0)
