@@ -45,6 +45,7 @@ def handle_packet(pkt):
 
         # Send to modules
         log_packet(packet_data)
+        print(f"[DEBUG] Packet from {packet_data['src']} ({packet_data['protocol']})")
         update_stats(packet_data)
 
         alerts = analyze_packet(packet_data)
@@ -67,7 +68,7 @@ def handle_packet(pkt):
         print("Packet flags:", packet_data["flags"])
         print("Packet summary:", pkt.summary())
         print("Has IP?", IP in pkt)
-        print(f"[DEBUG] Packet from {packet_data['src']} ({packet_data['protocol']})")
+  
 
     except Exception as e:
         print(f"[!] Error handling packet {e}")
