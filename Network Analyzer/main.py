@@ -1,5 +1,5 @@
 # Entry point
-from scapy.all import sniff, IP, TCP, UDP, DNS, get_if_list
+from scapy.all import sniff, IP, TCP, UDP, DNS
 from detector import analyze_packet
 from datetime import datetime
 from logger import log_packet, flush_logs
@@ -9,8 +9,6 @@ from visualizer import plot_protocol_distribution, display_summary, plot_top_sou
 import atexit
 atexit.register(display_summary)
 
-
-print(get_if_list())
 # Example packet callback
 def handle_packet(pkt):
     try:
@@ -69,6 +67,7 @@ def handle_packet(pkt):
         print("Packet flags:", packet_data["flags"])
         print("Packet summary:", pkt.summary())
         print("Has IP?", IP in pkt)
+        print(f"[DEBUG] Packet from {packet_data['src']} ({packet_data['protocol']})")
 
     except Exception as e:
         print(f"[!] Error handling packet {e}")
