@@ -5,6 +5,9 @@ from datetime import datetime
 from logger import log_packet, flush_logs
 from visualizer import update_stats, display_summary
 from sniffer import start_sniffing
+from visualizer import plot_protocol_distribution
+from visualizer import plot_top_source_ips
+
 import atexit
 atexit.register(display_summary)
 
@@ -64,3 +67,12 @@ def handle_packet(pkt):
 if __name__ == "__main__":
     print("[*] Starting network analyzer...")
     start_sniffing(packet_callback=handle_packet, count=0)
+
+
+def graceful_shutdown(signal_received=None, frame=None):
+    print("\n[+] Exiting and flushing logs...")
+    flush_logs()
+    display_summary()
+    plot_protocol_distribution()  # ← This shows the pie chart
+    plot_top_source_ips(10)       # ← This shows the bar chart
+    sys.exit(0)
