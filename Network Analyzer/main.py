@@ -27,11 +27,12 @@ def handle_packet(pkt):
             packet_data["dport"] = pkt[TCP].dport
 
             # Extract TCP flags
-            flags = pkt[TCP].flags
-            if flags == "S":
-                packet_data["flags"] = "S"
-            else:
-                packet_data["flags"] = str(flags)
+            if TCP in pkt:
+                tcp_layer = pkt[TCP]
+                if hasattr(tcp_layer, "flags"):
+                    packet_data["flags"] = str(tcp_layer.flags)
+                else:
+                    packet_data["flags"] = ""
 
         # === UDP/DNS Handling ===
         elif UDP in pkt:
