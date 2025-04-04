@@ -20,8 +20,11 @@ def log_packet(packet_data: dict):
     If the buffer is older than 2 hours, flush it to the disk.
     """
     global last_flush_time
+    
+    if not isinstance(packet_data, dict):
+        print("[!] Invalid packet format:", packet_data)
+        return
     log_buffer.append(packet_data)
-
     if datetime.now() - last_flush_time >+ LOG_INTERVAL:
         flush_logs()
 
