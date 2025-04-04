@@ -89,4 +89,4 @@ def graceful_shutdown(signal_received=None, frame=None):
 
 if __name__ == "__main__":
     print("[*] Starting network analyzer...")
-    start_sniffing(packet_callback=handle_packet, count=0)
+    start_sniffing(packet_callback=handle_packet, iface="eth0", count=0)
