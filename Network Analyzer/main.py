@@ -12,6 +12,13 @@ atexit.register(display_summary)
 # Example packet callback
 def handle_packet(pkt):
     try:
+            # Continue only if IP is present
+        if IP not in pkt:
+            return
+        
+        src_ip = pkt[IP].src
+        dst_ip = pkt[IP].dst
+        
         # === Packet log dictionary ===
         packet_data = {
             "timestamp": datetime.now().isoformat(),
@@ -21,43 +28,31 @@ def handle_packet(pkt):
             "dport": pkt.dport if TCP in pkt or UDP in pkt else "None",
             "flags": ""
         }
-        # === TCP Handling ===
-        if TCP in pkt and hasattr(pkt[TCP], "flags"):
+
+        # TCP
+        if TCP in pkt:
             packet_data["protocol"] = "TCP"
             packet_data["dport"] = pkt[TCP].dport
+            if hasattr(pkt[TCP], "flags"):
+                packet_data["flags"] = str(pkt[TCP].flags)
 
-            # Extract TCP flags
-            if TCP in pkt:
-                tcp_layer = pkt[TCP]
-                if hasattr(tcp_layer, "flags"):
-                    packet_data["flags"] = str(tcp_layer.flags)
-                else:
-                    packet_data["flags"] = ""
-
-        # === UDP/DNS Handling ===
+        # UDP / DNS
         elif UDP in pkt:
             packet_data["protocol"] = "UDP"
             packet_data["dport"] = pkt[UDP].dport
-
             if DNS in pkt:
                 packet_data["protocol"] = "DNS"
-        
-        # === If only IP but no TCP/UDP ===
-        elif IP in pkt:
-            packet_data["protocol"] = "IP"
-        
-    # Continue only if IP is present
-        if IP not in pkt:
-            return
-        
-        src_ip = pkt[IP].src
-        if not src_ip:
-            return
-        
-        packet_data = {
-            "timestamp": datetime.now().isoformat(),
-            "src": src_ip
-        }
+
+        # Send to modules
+        log_packet(packet_data)
+        update_stats(packet_data)
+
+        alerts = analyze_packet(packet_data)
+        for alert in alerts:
+            print(alert)
+
+    except Exception as e:
+        print(f"[!] Error handling packet {e}")
         
         # === Send to modules ===
         alerts = analyze_packet(packet_data)
