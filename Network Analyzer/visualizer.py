@@ -57,6 +57,7 @@ def plot_protocol_distribution():
     plt.title("Protocol Distribution")
     plt.pie(sizes, labels=labels, autopct = "%1.1f%")
     plt.tight_layout()
+    print("[DEBUG] Reached end of plot_protocol_distribution()")
     plt.show()
 
 def plot_top_source_ips(top_n=5):
@@ -77,6 +78,7 @@ def plot_top_source_ips(top_n=5):
     plt.xlabel("Source IP")
     plt.xticks(rotation=30)
     plt.tight_layout()
+    print("[DEBUG] Reached end of plot_protocol_distribution()")
     plt.show()
 
 # Summary
