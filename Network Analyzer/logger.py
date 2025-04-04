@@ -33,6 +33,7 @@ def flush_logs():
     global log_buffer, last_flush_time
 
     if not log_buffer:
+        print("[!] No logs to flush.")
         return                                          #nothing to flush
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
@@ -44,11 +45,15 @@ def flush_logs():
         json.dump(log_buffer, f, indent=2)
     
     #Save CSV
-    keys = log_buffer[0].keys()
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.DictWriter(f, filenames=keys)
-        writer.writeheader()
-        writer.writerows(log_buffer)
+    keys = log_buffer[0].keys() if log_buffer else None
+    if keys:
+        with open(csv_path, "w", newline="") as f:
+            writer = csv.DictWriter(f, filenames=keys)
+            writer.writeheader()
+            writer.writerows(log_buffer)
+    
+    else:
+        print("[!] No valid data for CSV - skipping write.")
 
     #Clear Buffer and Update Timestamp
     log_buffer= []
