@@ -44,8 +44,19 @@ def handle_packet(pkt):
         # === If only IP but no TCP/UDP ===
         elif IP in pkt:
             packet_data["protocol"] = "IP"
-
         
+    # Continue only if IP is present
+        if IP not in pkt:
+            return
+        
+        src_ip = pkt[IP].src
+        if not src_ip:
+            return
+        
+        packet_data = {
+            "timestamp": datetime.now().isoformat(),
+            "src": src_ip
+        }
         
         # === Send to modules ===
         alerts = analyze_packet(packet_data)
@@ -58,6 +69,9 @@ def handle_packet(pkt):
         flush_logs()
         
         print("Packet flags:", packet_data["flags"])
+        print("Packet summary:", pkt.summary())
+        print("Has IP?", IP in pkt)
+        print("Source IP: pkt[IP].src if IP in pkt else "N/A")
 
     except Exception as e:
         print(f"[!] Error handling packet {e}")
