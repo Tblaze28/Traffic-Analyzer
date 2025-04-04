@@ -1,4 +1,5 @@
 import matplotlib
+matplotlib.use("TkAgg")
 from collections import Counter
 from datetime import datetime
 import matplotlib.pyplot as plt
