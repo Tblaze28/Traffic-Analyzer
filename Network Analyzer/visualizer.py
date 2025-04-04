@@ -1,3 +1,4 @@
+import matplotlib
 from collections import Counter
 from datetime import datetime
 import matplotlib.pyplot as plt
