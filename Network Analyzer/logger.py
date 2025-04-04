@@ -39,6 +39,16 @@ def flush_logs():
         print("[!] No logs to flush.")
         return                                          #nothing to flush
     
+    # Filter out any invalid items (non-dicts or empty dicts)
+    clean_logs = [entry for entry in log_buffer if isinstance(entry, dict) and entry]
+
+    if not clean_logs:
+        print("[!] Log buffer contained no valid packet entries.")
+        return
+    
+    # Use fieldnames from the first clean entry
+    fieldnames = list(clean_logs[0].keys())
+    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     json_path = os.path.join(LOG_DIR, f"packet_log_{timestamp}.json")
     csv_path = os.path.join(LOG_DIR, f"packet_log_{timestamp}.csv")
@@ -59,5 +69,7 @@ def flush_logs():
         print("[!] No valid data for CSV - skipping write.")
 
     #Clear Buffer and Update Timestamp
+    
+    print(f"[+] Flushed {len(clean_logs)} packets to logs.")
     log_buffer= []
     last_flush_time = datetime.now()
