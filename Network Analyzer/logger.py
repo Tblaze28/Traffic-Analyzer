@@ -48,7 +48,7 @@ def flush_logs():
     
     # Use fieldnames from the first clean entry
     fieldnames = list(clean_logs[0].keys())
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     json_path = os.path.join(LOG_DIR, f"packet_log_{timestamp}.json")
     csv_path = os.path.join(LOG_DIR, f"packet_log_{timestamp}.csv")
@@ -58,15 +58,11 @@ def flush_logs():
         json.dump(log_buffer, f, indent=2)
     
     #Save CSV
-    keys = log_buffer[0].keys() if log_buffer else None
-    if keys:
-        with open(csv_path, "w", newline="") as f:
-            writer = csv.DictWriter(f, filenames=keys)
-            writer.writeheader()
-            writer.writerows(log_buffer)
-    
-    else:
-        print("[!] No valid data for CSV - skipping write.")
+     # ✅ Write CSV
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(clean_logs)
 
     #Clear Buffer and Update Timestamp
     
