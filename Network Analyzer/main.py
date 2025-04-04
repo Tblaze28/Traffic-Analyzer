@@ -71,7 +71,6 @@ def handle_packet(pkt):
         print("Packet flags:", packet_data["flags"])
         print("Packet summary:", pkt.summary())
         print("Has IP?", IP in pkt)
-        print("Source IP: pkt[IP].src if IP in pkt else "N/A")
 
     except Exception as e:
         print(f"[!] Error handling packet {e}")
